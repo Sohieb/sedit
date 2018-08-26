@@ -139,12 +139,14 @@ void editorDrawRows(struct abuf *ab) {
 void editorRefreshScreen() {
     struct abuf ab = ABUF_INIT;
 
+    abAppend(&ab, "\x1b[?25l", 6);   // hide the cursor before rendering anything
     abAppend(&ab, "\x1b[2J", 4);     // clear the entire screen
     abAppend(&ab, "\x1b[H", 3);      // Reposition the cursor at the beginning
 
     editorDrawRows(&ab);
 
     abAppend(&ab, "\x1b[H", 3);      // Reposition the cursor at the beginning
+    abAppend(&ab, "\x1b[?25h", 6);   // show the cursor again after refreshing the screen
 
     write(STDOUT_FILENO, ab.b, ab.len);
     abFree(&ab);
