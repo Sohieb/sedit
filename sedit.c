@@ -130,6 +130,7 @@ void editorDrawRows(struct abuf *ab) {
     for (y = 0; y < E.screenrows; ++y) {
         abAppend(ab, "~", 1);
 
+        abAppend(ab, "\x1b[K", 3);
         if (y < E.screenrows - 1) {
             abAppend(ab, "\r\n", 2);
         }
@@ -140,7 +141,7 @@ void editorRefreshScreen() {
     struct abuf ab = ABUF_INIT;
 
     abAppend(&ab, "\x1b[?25l", 6);   // hide the cursor before rendering anything
-    abAppend(&ab, "\x1b[2J", 4);     // clear the entire screen
+    
     abAppend(&ab, "\x1b[H", 3);      // Reposition the cursor at the beginning
 
     editorDrawRows(&ab);
