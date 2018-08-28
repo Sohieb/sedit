@@ -205,16 +205,16 @@ void editorRefreshScreen() {
 void editorMoveCursor(int key) {
     switch (key) {
         case ARROW_LEFT:
-            E.cy--;
+            if (E.cy > 0) E.cy--;
             break;
         case ARROW_RIGHT:
-            E.cy++;
+            if (E.cy < E.screencols) E.cy++;
             break;
         case ARROW_UP:
-            E.cx--;
+            if (E.cx > 0) E.cx--;
             break;
         case ARROW_DOWN:
-            E.cx++;
+            if (E.cx < E.screenrows) E.cx++;
             break;
     }
 }
