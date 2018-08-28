@@ -176,6 +176,23 @@ void editorRefreshScreen() {
 
 /*** input ***/
 
+void editorMoveCursor(char key) {
+    switch (key) {
+        case 'a':
+            E.cy--;
+            break;
+        case 'd':
+            E.cy++;
+            break;
+        case 'w':
+            E.cx--;
+            break;
+        case 's':
+            E.cx++;
+            break;
+    }
+}
+
 void editorProcessKeypress() {
     char c = editorReadKey();
 
@@ -184,6 +201,13 @@ void editorProcessKeypress() {
             write(STDOUT_FILENO, "\x1b[2J", 4);     // clear the entire screen
             write(STDOUT_FILENO, "\x1b[H", 3);      // Reposition the cursor at the beginning
             exit(0);
+            break;
+        
+        case 'w':
+        case 's':
+        case 'a':
+        case 'd':
+            editorMoveCursor(c);
             break;
     }
 }
