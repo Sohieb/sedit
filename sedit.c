@@ -268,7 +268,7 @@ void editorRefreshScreen() {
     editorDrawRows(&ab);
 
     char buf[32];
-    snprintf(buf, sizeof(buf), "\x1b[%d;%dH", E.cx + 1, E.cy + 1);
+    snprintf(buf, sizeof(buf), "\x1b[%d;%dH", E.cy + 1, E.cx + 1);
     abAppend(&ab, buf, strlen(buf));
 
     abAppend(&ab, "\x1b[?25h", 6);   // show the cursor again after refreshing the screen
@@ -283,28 +283,28 @@ void editorRefreshScreen() {
 void editorMoveCursor(int key) {
     switch (key) {
         case ARROW_LEFT:
-            if (E.cy > 0) E.cy--;
-            break;
-        case ARROW_RIGHT:
-            if (E.cy < E.screencols) E.cy++;
-            break;
-        case ARROW_UP:
             if (E.cx > 0) E.cx--;
             break;
+        case ARROW_RIGHT:
+            if (E.cx < E.screencols) E.cx++;
+            break;
+        case ARROW_UP:
+            if (E.cy > 0) E.cy--;
+            break;
         case ARROW_DOWN:
-            if (E.cx < E.screenrows) E.cx++;
+            if (E.cy < E.screenrows) E.cy++;
             break;
         case PAGE_UP:
-            E.cx = 0;
-            break;
-        case PAGE_DOWN:
-            E.cx = E.screenrows - 1;
-            break;
-        case HOME_KEY:
             E.cy = 0;
             break;
+        case PAGE_DOWN:
+            E.cy = E.screenrows - 1;
+            break;
+        case HOME_KEY:
+            E.cx = 0;
+            break;
         case END_KEY:
-            E.cy = E.screencols - 1;
+            E.cx = E.screencols - 1;
             break;
     }
 }
