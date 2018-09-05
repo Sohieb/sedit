@@ -302,13 +302,14 @@ void editorRefreshScreen() {
 /*** input ***/
 
 void editorMoveCursor(int key) {
+    erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+
     switch (key) {
         case ARROW_LEFT:
             if (E.cx > 0) E.cx--;
             break;
         case ARROW_RIGHT:
-            // if (E.cx < E.screencols) E.cx++;
-            E.cx++;
+            if (row && E.cx < row->size) E.cx++;
             break;
         case ARROW_UP:
             if (E.cy > 0) E.cy--;
@@ -328,6 +329,13 @@ void editorMoveCursor(int key) {
         case END_KEY:
             E.cx = E.screencols - 1;
             break;
+    }
+    // readjusting the X pos of the cursor after processing the key-press
+    // because it might move up or down to a shorter line than it was already
+    row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+    int rowlen = row ? row->size : 0;
+    if (E.cx > rowlen) {
+        E.cx = rowlen;
     }
 }
 
