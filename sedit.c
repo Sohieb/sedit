@@ -351,7 +351,7 @@ void editorRefreshScreen() {
 
 void editorMoveCursor(int key) {
     erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
-
+    int dummy;
     switch (key) {
         case ARROW_LEFT:
             if (E.cx > 0) {
@@ -376,10 +376,14 @@ void editorMoveCursor(int key) {
             if (E.cy < E.numrows) E.cy++;
             break;
         case PAGE_UP:
-            E.cy = 0;
+            E.cy = E.rowoff;
+            dummy = E.screenrows;
+            while (dummy--) editorMoveCursor(ARROW_UP);
             break;
         case PAGE_DOWN:
-            E.cy = E.screenrows - 1;
+            E.cy = E.rowoff + E.screenrows - 1;
+            dummy = E.screenrows;
+            while (dummy--) editorMoveCursor(ARROW_DOWN);
             break;
         case HOME_KEY:
             E.cx = 0;
