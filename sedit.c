@@ -352,6 +352,7 @@ void editorRefreshScreen() {
 void editorMoveCursor(int key) {
     erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
     int dummy;
+    
     switch (key) {
         case ARROW_LEFT:
             if (E.cx > 0) {
@@ -389,7 +390,8 @@ void editorMoveCursor(int key) {
             E.cx = 0;
             break;
         case END_KEY:
-            E.cx = E.screencols - 1;
+            if (row)
+                E.cx = row->rsize;
             break;
     }
     // readjusting the X pos of the cursor after processing the key-press
