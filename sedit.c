@@ -319,10 +319,18 @@ void editorDrawRows(struct abuf *ab) {
         }
 
         abAppend(ab, "\x1b[K", 3);
-        if (y < E.screenrows - 1) {
-            abAppend(ab, "\r\n", 2);
-        }
+        abAppend(ab, "\r\n", 2);
     }
+}
+
+void editorDrawStatusBar(struct abuf *ab) {
+    abAppend(ab, "\x1b[7m", 4);
+    int len = 0;
+    while (len < E.screencols) {
+        abAppend(ab, " ", 1);
+        len++;
+    }
+    abAppend(ab, "\x1b[m", 3);
 }
 
 void editorRefreshScreen() {
@@ -335,6 +343,7 @@ void editorRefreshScreen() {
     abAppend(&ab, "\x1b[H", 3);      // Reposition the cursor at the beginning
 
     editorDrawRows(&ab);
+    editorDrawStatusBar(&ab);
 
     char buf[32];
     snprintf(buf, sizeof(buf), "\x1b[%d;%dH", (E.cy - E.rowoff) + 1, (E.rx - E.coloff) + 1);
@@ -352,7 +361,7 @@ void editorRefreshScreen() {
 void editorMoveCursor(int key) {
     erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
     int dummy;
-    
+
     switch (key) {
         case ARROW_LEFT:
             if (E.cx > 0) {
@@ -440,6 +449,8 @@ void initEditor() {
 
     if (getWindowSize(&E.screenrows, &E.screencols) == -1)
         die("getWindowSize");
+
+    E.screenrows -= 1;
 }
 
 int main(int argc, char *argv[]) {
